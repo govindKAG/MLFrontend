@@ -24,9 +24,9 @@ def index():
     # text/html and text/plain seem to work
     return flask.Response(inner(podname), mimetype='text/html')  
 
-@app.route('/pods')
-def pods():
-    pods = subprocess.check_output("kubectl get pods emote-trainc3-jv88q -o json", shell=True)
+@app.route('/pods/<podname>')
+def pods(podname):
+    pods = subprocess.check_output(f"kubectl get pod {podname} -o json", shell=True)
     pods = json.loads(pods)
     output = json2html.convert(json = pods)
     return output
