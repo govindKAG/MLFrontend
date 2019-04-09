@@ -1,9 +1,10 @@
 import flask
-import subprocess
-import time          #You don't need this. Just included it so you can see the output stream.
 import json
-from json2html import *
+import subprocess
+import time          
+
 from flask import request
+from json2html import *
 
 app = flask.Flask(__name__)
 
