@@ -1,6 +1,8 @@
 import flask
 import subprocess
 import time          #You don't need this. Just included it so you can see the output stream.
+import json
+from json2html import *
 from flask import request
 
 app = flask.Flask(__name__)
@@ -23,5 +25,8 @@ def index():
 
 @app.route('/pods')
 def pods():
-    pods = subprocess.check_output("kubectl get pods --all-namespaces", shell=True)
-    return  flask.Response(pods, mimetype='text/plain')
+    pods = subprocess.check_output("kubectl get pods emote-trainc3-jv88q -o json", shell=True)
+    pods = json.loads(pods)
+    output = json2html.convert(json = pods)
+    return output
+    #return  flask.Response(pods, mimetype='text/plain')
