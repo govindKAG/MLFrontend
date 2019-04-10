@@ -18,7 +18,7 @@ def index():
             stdout=subprocess.PIPE
         )
 
-        for line in iter(proc.stdout.readline,''):
+        for line in iter(proc.stdout.readline, b''):
             time.sleep(0.1)                           # Don't need this just shows the text streaming
             yield str(line).strip() + '<br/>\n'
     # text/html and text/plain seem to work
