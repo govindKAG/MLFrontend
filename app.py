@@ -2,11 +2,14 @@ import flask
 import json
 import subprocess
 import time          
+import re
 
 from flask import request
 from json2html import *
 
 app = flask.Flask(__name__)
+
+ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 
 @app.route('/log')
 def index():
@@ -20,7 +23,8 @@ def index():
 
         for line in iter(proc.stdout.readline, b''):
             time.sleep(0.1)                           # Don't need this just shows the text streaming
-            yield bytes.decode(line).strip() + '<br/>\n'
+            #ansi_escape.sub('', sometext)
+            yield ansi_escape.sub('',bytes.decode(line).strip()) + '<br/>\n'
     # text/html and text/plain seem to work
     return flask.Response(inner(podname), mimetype='text/html')  
 
