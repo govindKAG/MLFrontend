@@ -17,7 +17,7 @@ def index():
     podname = request.args.get('podname')
     def inner(podname):
         proc = subprocess.Popen(
-            ['argo','logs','-w',podname],             #call something with a lot of output so we can see it
+            ['argo','logs','-wf',podname],             #call something with a lot of output so we can see it
             shell=True,
             stdout=subprocess.PIPE
         )
@@ -46,3 +46,28 @@ def DownloadLogFile (path = None):
         return send_file(path, as_attachment=True)
     except Exception as e:
         pass
+
+#temp, doesn't stream yet
+@app.route('/trainlog/<podname>')
+def trainlog(podname):
+    pods   = subprocess.check_output(f"kubectl logs {podname}",
+            shell = True)
+    output = bytes.decode(pods)
+    return flask.Response(output, mimetype='text/plain')
+
+@app.route('/stream')
+def streamTest():
+    podname = request.args.get('podname')
+    def inner(podname):
+        proc = subprocess.Popen(
+            ['kubectl','logs','-f','--tail','10',podname],             #call something with a lot of output so we can see it
+            shell=True,
+            stdout=subprocess.PIPE
+        )
+
+        for line in iter(proc.stdout.readline, b''):
+            time.sleep(0.1)                           # Don't need this just shows the text streaming
+            #ansi_escape.sub('', sometext)
+            yield ansi_escape.sub('',bytes.decode(line).strip()) + '<br/>\n'
+    # text/html and text/plain seem to work
+    return flask.Response(inner(podname), mimetype='text/html')  
