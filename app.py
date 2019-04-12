@@ -5,6 +5,7 @@ import time
 import re
 
 from flask import request
+from flask import send_file
 from json2html import *
 
 app = flask.Flask(__name__)
@@ -30,8 +31,18 @@ def index():
 
 @app.route('/pods/<podname>')
 def pods(podname):
-    pods = subprocess.check_output(f"kubectl get pod {podname} -o json", shell=True)
-    pods = json.loads(pods)
-    output = json2html.convert(json = pods)
+    pods   = subprocess.check_output(f"kubectl get pod {podname} -o json",
+            shell = True)
+    pods   = json.loads(pods)
+    output = json2html.convert(json                                              = pods)
     return output
     #return  flask.Response(pods, mimetype='text/plain')
+
+@app.route("/download/<path>")
+def DownloadLogFile (path = None):
+    if path is None:
+        return "Not found"
+    try:
+        return send_file(path, as_attachment=True)
+    except Exception as e:
+        pass
