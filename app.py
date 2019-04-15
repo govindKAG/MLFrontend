@@ -7,9 +7,12 @@ import shlex
 
 from flask import request
 from flask import send_file
+from flask import render_template
 from json2html import *
+from forms import BuildForm
 
 app = flask.Flask(__name__)
+app.config['SECRET_KEY'] = 'horses-batteries-salt-apples'
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 
@@ -100,3 +103,8 @@ def buildImage():
             time.sleep(0.1)                           # Don't need this just shows the text streaming
             yield ansi_escape.sub('',bytes.decode(line).strip()) + '<br/>\n'
     return flask.Response(inner(version, github_user, github_revsion, github_repo, docker_user, train_name, docker_image_name, latest_job), mimetype='text/html')  
+
+@app.route('/buildui', methods=['GET', 'POST'])
+def buildui():
+    form = BuildForm()
+    return render_template('page.html', title='nexo', form=form)
