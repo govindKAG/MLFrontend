@@ -107,4 +107,6 @@ def buildImage():
 @app.route('/buildui', methods=['GET', 'POST'])
 def buildui():
     form = BuildForm()
+    if form.validate_on_submit():
+        print(request.form.to_dict())
     return render_template('page.html', title='nexo', form=form)
