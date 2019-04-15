@@ -1,0 +1,109 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: kubeflow-sk-train-
+spec:
+  entrypoint: workflow
+  arguments:
+    parameters:
+    - name: version
+      value: 2.8
+    - name: github-user
+      value: kubeflow
+    - name: github-repo
+      value: mldynamic
+    - name: github-revision
+      value: master      
+    - name: docker-user
+      value: seldonio
+    - name: build-push-image
+      value: false      
+    - name: train-name
+      value: emote-train      
+    - name: execute-train
+      value: false     
+    - name: docker-image-name
+      value: emotion-analysis-sk
+  volumes:
+  - name: my-secret-vol
+    secret:
+      secretName: docker-credentials     # name of an existing k8s secret
+  templates:
+  - name: workflow
+    steps:
+    - - name: build-push 
+        template: build-and-push
+        when: "{{workflow.parameters.build-push-image}} == true"
+    - - name: train
+        template: tfjob
+        when: "{{workflow.parameters.execute-train}} == true"
+  - name: build-and-push
+    inputs:
+      artifacts:
+      - name: argo-source
+        path: /src/mldynamic
+        git:
+          repo: https://github.com/{{workflow.parameters.github-user}}/{{workflow.parameters.github-repo}}.git
+          revision: "{{workflow.parameters.github-revision}}"          
+    container:
+      image: docker:17.10
+      command: [sh,-c]
+      args: ["cd /src/mldynamic/models/sk_mnist/train ; ls -la ; chmod 777 ./* ; until docker ps; do sleep 3; done; docker build --force-rm=true -t {{workflow.parameters.docker-user}}/{{workflow.parameters.docker-image-name}}:{{workflow.parameters.version}} . ;docker images;echo $DOCKER_PASSWORD | docker login --username=$DOCKER_USERNAME --password-stdin; docker push {{workflow.parameters.docker-user}}/{{workflow.parameters.docker-image-name}}:{{workflow.parameters.version}}"]
+      env:
+      - name: DOCKER_HOST               #the docker daemon can be access on the standard port on localhost
+        value: 127.0.0.1
+      - name: DOCKER_USERNAME  # name of env var
+        valueFrom:
+          secretKeyRef:
+            name: docker-credentials     # name of an existing k8s secret
+            key: username     # 'key' subcomponent of the secret
+      - name: DOCKER_PASSWORD  # name of env var
+        valueFrom:
+          secretKeyRef:
+            name: docker-credentials     # name of an existing k8s secret
+            key: password     # 'key' subcomponent of the secret
+      volumeMounts:
+      - name: my-secret-vol     # mount file containing secret at /secret/mountpath
+        mountPath: "/secret/mountpath"
+    sidecars:
+    - name: dind
+      image: docker:17.10-dind          #Docker already provides an image for running a Docker daemon
+      securityContext:
+        privileged: true                #the Docker daemon can only run in a privileged container
+      mirrorVolumeMounts: true
+  - name: tfjob
+    resource:                   #indicates that this is a resource template
+      action: create             #can be any kubectl action (e.g. create, delete, apply, patch)
+      successCondition: status.succeeded == 1
+      manifest: |   #put your kubernetes spec here
+       apiVersion: "batch/v1"
+       kind: "Job"
+       metadata: 
+         name: {{workflow.parameters.train-name}}
+         ownerReferences:
+         - apiVersion: argoproj.io/v1alpha1
+           kind: Workflow
+           controller: true
+           name: kubeflow-train
+           uid: {{workflow.uid}}
+       spec: 
+         template: 
+           metadata: 
+             name: {{workflow.parameters.train-name}}
+           spec: 
+             containers: 
+               - 
+                 image: "{{workflow.parameters.docker-user}}/{{workflow.parameters.docker-image-name}}:{{workflow.parameters.version}}"
+                 name: {{workflow.parameters.train-name}}
+                 imagePullPolicy: Always
+                 volumeMounts: 
+                   - 
+                     mountPath: "/data"
+                     name: "persistent-storage"
+             restartPolicy: "Never"
+             volumes: 
+               - 
+                 name: "persistent-storage"
+                 persistentVolumeClaim: 
+                   claimName: "nfs-1"
+
