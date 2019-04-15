@@ -3,6 +3,7 @@ import json
 import subprocess
 import time          
 import re
+import shlex
 
 from flask import request
 from flask import send_file
@@ -83,17 +84,19 @@ def buildImage():
     docker_image_name = request.args.get('docker-image-name')
 
     result = subprocess.check_output(f"argo submit build.yaml -p build-push-image=true -p execute-train=false -p docker-user={docker_user} -p github-user={github_user} -p train-name={train_name} -p version={version} -p docker-image-name={docker_image_name} -p github-repo={github_repo}", shell=True)
+
+    argo_jobs = subprocess.check_output(shlex.split('argo list'))
+    argo_jobs = argo_jobs.decode('utf-8')
+    #print(argo_jobs)
+    argo_jobs = argo_jobs.splitlines()
+    #print(argo_jobs)
     
-    def inner(version, github_user, github_revsion, github_repo, docker_user, train_name, docker_image_name):
-        proc = subprocess.Popen(
-            ['kubectl','logs','-f','--tail','10',podname],             #call something with a lot of output so we can see it
-            shell=True,
-            stdout=subprocess.PIPE
-        )
+    latest_job = argo_jobs[1].split(' ')[0]
+    
+    def inner(version, github_user, github_revsion, github_repo, docker_user, train_name, docker_image_name, latest_job):
+        proc = subprocess.Popen(shlex.split(f'argo logs -wf {latest_job}'), shell=True, stdout=subprocess.PIPE)
 
         for line in iter(proc.stdout.readline, b''):
             time.sleep(0.1)                           # Don't need this just shows the text streaming
-            #ansi_escape.sub('', sometext)
             yield ansi_escape.sub('',bytes.decode(line).strip()) + '<br/>\n'
-    # text/html and text/plain seem to work
-    return flask.Response(inner(podname), mimetype='text/html')  
+    return flask.Response(inner(version, github_user, github_revsion, github_repo, docker_user, train_name, docker_image_name, latest_job), mimetype='text/html')  
