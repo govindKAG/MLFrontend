@@ -71,3 +71,29 @@ def streamTest():
             yield ansi_escape.sub('',bytes.decode(line).strip()) + '<br/>\n'
     # text/html and text/plain seem to work
     return flask.Response(inner(podname), mimetype='text/html')  
+
+@app.route('/build')
+def buildImage():
+    version           = request.args.get('version')
+    github_user       = request.args.get('github-user')
+    github_revsion    = request.args.get('github-revision')
+    github_repo       = request.args.get('github-repo')
+    docker_user       = request.args.get('docker-user')
+    train_name        = request.args.get('train-name')
+    docker_image_name = request.args.get('docker-image-name')
+
+    result = subprocess.check_output(f"argo submit build.yaml -p build-push-image=true -p execute-train=false -p docker-user={docker_user} -p github-user={github_user} -p train-name={train_name} -p version={version} -p docker-image-name={docker_image_name} -p github-repo={github_repo}", shell=True)
+    
+    def inner(version, github_user, github_revsion, github_repo, docker_user, train_name, docker_image_name):
+        proc = subprocess.Popen(
+            ['kubectl','logs','-f','--tail','10',podname],             #call something with a lot of output so we can see it
+            shell=True,
+            stdout=subprocess.PIPE
+        )
+
+        for line in iter(proc.stdout.readline, b''):
+            time.sleep(0.1)                           # Don't need this just shows the text streaming
+            #ansi_escape.sub('', sometext)
+            yield ansi_escape.sub('',bytes.decode(line).strip()) + '<br/>\n'
+    # text/html and text/plain seem to work
+    return flask.Response(inner(podname), mimetype='text/html')  
