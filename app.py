@@ -13,6 +13,8 @@ from flask import send_file
 from flask import render_template
 from json2html import *
 from forms import BuildForm
+from forms import TrainForm
+from util import generate_yaml
 
 app = flask.Flask(__name__)
 app.config['SECRET_KEY'] = 'horses-batteries-salt-apples'
@@ -115,4 +117,16 @@ def buildui():
         args = copy.deepcopy(request.form.to_dict())
         del args['csrf_token']
         return redirect(url_for('buildImage',**args))
-    return render_template('page.html', title='nexo', form=form)
+    return render_template('build.html', title='nexo', form=form)
+
+@app.route('/trainui', methods=['GET', 'POST'])
+def trainui():
+    form = TrainForm()
+    if form.validate_on_submit():
+        print(request.form.to_dict())
+        args = copy.deepcopy(request.form.to_dict())
+        del args['csrf_token']
+        print(args['args'])
+        generate_yaml('train.yaml', 'test.yaml', args)
+        #return redirect(url_for('buildImage',**args))
+    return render_template('train.html', title='nexo', form=form)
