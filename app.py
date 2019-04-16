@@ -4,8 +4,11 @@ import subprocess
 import time          
 import re
 import shlex
+import copy
 
 from flask import request
+from flask import redirect
+from flask import url_for
 from flask import send_file
 from flask import render_template
 from json2html import *
@@ -79,12 +82,12 @@ def streamTest():
 @app.route('/build')
 def buildImage():
     version           = request.args.get('version')
-    github_user       = request.args.get('github-user')
-    github_revsion    = request.args.get('github-revision')
-    github_repo       = request.args.get('github-repo')
-    docker_user       = request.args.get('docker-user')
-    train_name        = request.args.get('train-name')
-    docker_image_name = request.args.get('docker-image-name')
+    github_user       = request.args.get('github_user')
+    github_revsion    = request.args.get('github_revision')
+    github_repo       = request.args.get('github_repo')
+    docker_user       = request.args.get('docker_user')
+    train_name        = request.args.get('train_name')
+    docker_image_name = request.args.get('docker_image_name')
 
     result = subprocess.check_output(f"argo submit build.yaml -p build-push-image=true -p execute-train=false -p docker-user={docker_user} -p github-user={github_user} -p train-name={train_name} -p version={version} -p docker-image-name={docker_image_name} -p github-repo={github_repo}", shell=True)
 
@@ -108,5 +111,8 @@ def buildImage():
 def buildui():
     form = BuildForm()
     if form.validate_on_submit():
-        print(request.form.to_dict())
+        #print(request.form.to_dict())
+        args = copy.deepcopy(request.form.to_dict())
+        del args['csrf_token']
+        return redirect(url_for('buildImage',**args))
     return render_template('page.html', title='nexo', form=form)
