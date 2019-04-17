@@ -7,7 +7,7 @@ class BuildForm(FlaskForm):
     #remember_me = BooleanField('Remember Me')
 
     version           = StringField('version', validators           = [DataRequired()])
-    github_user       = StringField('github _user', validators       = [DataRequired()])
+    github_user       = StringField('github _user', validators      = [DataRequired()])
     github_revision   = StringField('github_revision', validators   = [DataRequired()])
     github_repo       = StringField('github_repo', validators       = [DataRequired()])
     docker_user       = StringField('docker_user', validators       = [DataRequired()])
