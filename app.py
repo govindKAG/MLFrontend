@@ -15,6 +15,7 @@ from json2html import *
 from forms import BuildForm
 from forms import TrainForm
 from util import generate_yaml
+from util import get_train_pod_name
 
 app = flask.Flask(__name__)
 app.config['SECRET_KEY'] = 'horses-batteries-salt-apples'
@@ -128,5 +129,34 @@ def trainui():
         del args['csrf_token']
         print(args['args'])
         generate_yaml('train.yaml', 'test.yaml', args)
-        #return redirect(url_for('buildImage',**args))
+        return redirect(url_for('trainImage',**args))
     return render_template('train.html', title='nexo', form=form)
+
+
+@app.route('/train')
+def trainImage():
+    version           = request.args.get('version')
+    docker_user       = request.args.get('docker_user')
+    train_name        = request.args.get('train_name')
+    docker_image_name = request.args.get('docker_image_name')
+
+    result = subprocess.check_output(f"argo submit test.yaml -p build-push-image=false -p execute-train=true -p docker-user={docker_user} -p train-name={train_name} -p version={version} -p docker-image-name={docker_image_name}", shell=True)
+
+    print(result)
+    #argo_jobs = subprocess.check_output(shlex.split('argo list'))
+    #argo_jobs = argo_jobs.decode('utf-8')
+    ##print(argo_jobs)
+    #argo_jobs = argo_jobs.splitlines()
+    ##print(argo_jobs)
+    #
+    #latest_job = argo_jobs[1].split(' ')[0]
+    train_pod_name = get_train_pod_name(train_name)
+    print(train_pod_name)
+    
+    def inner(version, docker_user, train_name, docker_image_name, train_pod_name):
+        proc = subprocess.Popen(shlex.split(f'kubectl logs -f {train_pod_name}'), shell=True, stdout=subprocess.PIPE)
+
+        for line in iter(proc.stdout.readline, b''):
+            time.sleep(0.1)                           # Don't need this just shows the text streaming
+            yield ansi_escape.sub('',bytes.decode(line).strip()) + '<br/>\n'
+    return flask.Response(inner(version, docker_user, train_name, docker_image_name, train_pod_name), mimetype='text/html')  
