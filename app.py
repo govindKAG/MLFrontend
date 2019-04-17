@@ -143,13 +143,6 @@ def trainImage():
     result = subprocess.check_output(f"argo submit test.yaml -p build-push-image=false -p execute-train=true -p docker-user={docker_user} -p train-name={train_name} -p version={version} -p docker-image-name={docker_image_name}", shell=True)
 
     print(result)
-    #argo_jobs = subprocess.check_output(shlex.split('argo list'))
-    #argo_jobs = argo_jobs.decode('utf-8')
-    ##print(argo_jobs)
-    #argo_jobs = argo_jobs.splitlines()
-    ##print(argo_jobs)
-    #
-    #latest_job = argo_jobs[1].split(' ')[0]
     train_pod_name = get_train_pod_name(train_name)
     print(train_pod_name)
     
