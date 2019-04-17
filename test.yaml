@@ -98,8 +98,8 @@ spec:
                 - 
                   image: "{{workflow.parameters.docker-user}}/{{workflow.parameters.docker-image-name}}:{{workflow.parameters.version}}"
                   name: {{workflow.parameters.train-name}}
-                  command : ["python","-u","train.py"]
-                  args: ["--testcases=40","--arg='something'"]
+                  command : ["python","-u","create_model.py"]
+                  args: ["--testcases=70"]
                   imagePullPolicy: Always
                   volumeMounts: 
                     - 
