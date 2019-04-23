@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <title>Nexo</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+        <div class="form-style-6">
+        <h1>Train</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.version.label }}<br>
+            {{ form.version() }}
+        </p>
+        <p>
+            {{ form.docker_user.label }}<br>
+            {{ form.docker_user() }}
+        </p>
+        <p>
+            {{ form.train_name.label }}<br>
+            {{ form.train_name() }}
+        </p>
+        <p>
+            {{ form.docker_image_name.label }}<br>
+            {{ form.docker_image_name() }}
+        </p>
+        <p>
+            {{ form.command.label }}<br>
+            {{ form.command() }}
+        </p>
+        <p>
+            {{ form.args.label }}<br>
+            {{ form.args() }}
+        </p>
+        <p>{{ form.train() }}</p>
+    </form>
+        </div>
+</body>
+</html>
