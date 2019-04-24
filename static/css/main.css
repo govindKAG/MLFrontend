@@ -6,7 +6,7 @@
 	background: #F7F7F7;
 }
 .form-style-6 h1{
-	background: #43D1AF;
+	background: #2F365F;
 	padding: 20px 0;
 	font-size: 140%;
 	font-weight: 300;
@@ -54,9 +54,9 @@
 .form-style-6 textarea:focus,
 .form-style-6 select:focus
 {
-	box-shadow: 0 0 5px #43D1AF;
+	box-shadow: 0 0 5px #2F365F;
 	padding: 3%;
-	border: 1px solid #43D1AF;
+	border: 1px solid #2F365F;
 }
 
 .form-style-6 input[type="submit"],
@@ -66,8 +66,8 @@
 	-moz-box-sizing: border-box;
 	width: 100%;
 	padding: 3%;
-	background: #43D1AF;
-	border-bottom: 2px solid #30C29E;
+	background: #2F365F;
+	border-bottom: 2px solid #191E38;
 	border-top-style: none;
 	border-right-style: none;
 	border-left-style: none;	
@@ -76,8 +76,8 @@
 }
 .form-style-6 input[type="submit"]:hover,
 .form-style-6 input[type="button"]:hover{
-	background: #2EBC99;
-	box-shadow: 0 0 5px #43D1AF;
+	background: #191E38;
+	box-shadow: 0 0 5px #2F365F;
 	padding: 3%;
-	border: 2px solid #43D1AF;
+	border: 2px solid #2F365F;
 }
