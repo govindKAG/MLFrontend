@@ -22,6 +22,10 @@ app.config['SECRET_KEY'] = 'horses-batteries-salt-apples'
 
 ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
 
+@app.route('/')
+def home():
+    return render_template('test.html')
+
 @app.route('/log')
 def index():
     podname = request.args.get('podname')
