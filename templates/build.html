@@ -4,38 +4,39 @@
         <meta charset="UTF-8">
         <title>Nexo</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body>
-        <div class="form-style-6">
+        <div class="form-style-6 shadow-lg">
         <h1>BUILD</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
-            {{ form.version.label }}<br>
+            {{ form.version.label(class_='text-indigo-darker') }}<br>
             {{ form.version() }}
         </p>
         <p>
-            {{ form.github_user.label }}<br>
+            {{ form.github_user.label(class_='text-indigo-darker') }}<br>
             {{ form.github_user() }}
         </p>
         <p>
-            {{ form.github_revision.label }}<br>
+            {{ form.github_revision.label(class_='text-indigo-darker') }}<br>
             {{ form.github_revision() }}
         </p>
         <p>
-            {{ form.github_repo.label }}<br>
+            {{ form.github_repo.label(class_='text-indigo-darker') }}<br>
             {{ form.github_repo() }}
         </p>
         <p>
-            {{ form.docker_user.label }}<br>
+            {{ form.docker_user.label(class_='text-indigo-darker') }}<br>
             {{ form.docker_user() }}
         </p>
         <p>
-            {{ form.train_name.label }}<br>
+            {{ form.train_name.label(class_='text-indigo-darker') }}<br>
             {{ form.train_name() }}
         </p>
         <p>
-            {{ form.docker_image_name.label }}<br>
+            {{ form.docker_image_name.label(class_='text-indigo-darker') }}<br>
             {{ form.docker_image_name() }}
         </p>
         <p>{{ form.build() }}</p>
