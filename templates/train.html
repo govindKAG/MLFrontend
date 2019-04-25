@@ -12,30 +12,30 @@
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
-            {{ form.version.label(class_='text-indigo-darker') }}<br>
+            {{ form.version.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.version() }}
         </p>
         <p>
-            {{ form.docker_user.label(class_='text-indigo-darker') }}<br>
+            {{ form.docker_user.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.docker_user() }}
         </p>
         <p>
-            {{ form.train_name.label(class_='text-indigo-darker') }}<br>
+            {{ form.train_name.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.train_name() }}
         </p>
         <p>
-            {{ form.docker_image_name.label(class_='text-indigo-darker') }}<br>
+            {{ form.docker_image_name.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.docker_image_name() }}
         </p>
         <p>
-            {{ form.command.label(class_='text-indigo-darker') }}<br>
+            {{ form.command.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.command() }}
         </p>
         <p>
-            {{ form.args.label(class_='text-indigo-darker') }}<br>
+            {{ form.args.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.args() }}
         </p>
-        <p>{{ form.train() }}</p>
+        <p>{{ form.train(class_='font-bold') }}</p>
     </form>
         </div>
 </body>

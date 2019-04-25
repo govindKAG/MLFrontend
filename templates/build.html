@@ -12,34 +12,34 @@
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
-            {{ form.version.label(class_='text-indigo-darker') }}<br>
+            {{ form.version.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.version() }}
         </p>
         <p>
-            {{ form.github_user.label(class_='text-indigo-darker') }}<br>
+            {{ form.github_user.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.github_user() }}
         </p>
         <p>
-            {{ form.github_revision.label(class_='text-indigo-darker') }}<br>
+            {{ form.github_revision.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.github_revision() }}
         </p>
         <p>
-            {{ form.github_repo.label(class_='text-indigo-darker') }}<br>
+            {{ form.github_repo.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.github_repo() }}
         </p>
         <p>
-            {{ form.docker_user.label(class_='text-indigo-darker') }}<br>
+            {{ form.docker_user.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.docker_user() }}
         </p>
         <p>
-            {{ form.train_name.label(class_='text-indigo-darker') }}<br>
+            {{ form.train_name.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.train_name() }}
         </p>
         <p>
-            {{ form.docker_image_name.label(class_='text-indigo-darker') }}<br>
+            {{ form.docker_image_name.label(class_='text-indigo-darker font-bold') }}<br>
             {{ form.docker_image_name() }}
         </p>
-        <p>{{ form.build() }}</p>
+        <p>{{ form.build(class_='font-bold') }}</p>
     </form>
         </div>
 </body>
