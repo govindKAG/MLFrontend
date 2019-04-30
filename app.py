@@ -62,12 +62,16 @@ def DownloadLogFile (path = None):
         pass
 
 #temp, doesn't stream yet
-@app.route('/trainlog/<podname>')
-def trainlog(podname):
-    pods   = subprocess.check_output(f"kubectl logs {podname}",
-            shell = True)
-    output = bytes.decode(pods)
-    return flask.Response(output, mimetype='text/plain')
+@app.route('/trainlog/<train_name>')
+def trainlog(train_name):
+    train_pod_name = get_train_pod_name(train_name)
+    def inner(train_pod_name):
+        proc = subprocess.Popen(shlex.split(f'kubectl logs -f {train_pod_name}'), shell=True, stdout=subprocess.PIPE)
+
+        for line in iter(proc.stdout.readline, b''):
+            time.sleep(0.1)                           # Don't need this just shows the text streaming
+            yield '<p style="color: blue; line-height:2px" >'+ansi_escape.sub('',bytes.decode(line).strip()) + '</p>\n'
+    return flask.Response(inner(train_pod_name), mimetype='text/html')  
 
 @app.route('/stream')
 def streamTest():
