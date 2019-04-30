@@ -67,10 +67,11 @@ def trainlog(train_name):
     train_pod_name = get_train_pod_name(train_name)
     def inner(train_pod_name):
         proc = subprocess.Popen(shlex.split(f'kubectl logs -f {train_pod_name}'), shell=True, stdout=subprocess.PIPE)
+        #yield f'<h1> logs for {train_pod_name}</h1>\n'
 
         for line in iter(proc.stdout.readline, b''):
             time.sleep(0.1)                           # Don't need this just shows the text streaming
-            yield '<p style="color: blue; line-height:2px" >'+ansi_escape.sub('',bytes.decode(line).strip()) + '</p>\n'
+            yield '<p style="color: blue; line-height:2.5px; word-wrap: break-word;" >'+ansi_escape.sub('',bytes.decode(line).strip()) + '</p>\n'
     return flask.Response(inner(train_pod_name), mimetype='text/html')  
 
 @app.route('/stream')
