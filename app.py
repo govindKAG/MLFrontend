@@ -52,6 +52,16 @@ def pods(podname):
     return output
     #return  flask.Response(pods, mimetype='text/plain')
 
+@app.route('/list_train_pods')
+def list_train_pods():
+    pods = subprocess.check_output(f"kubectl get pods -l use=trainpod -o json",
+            shell = True)
+    pods = json.loads(pods)
+    items = pods['items']
+    statuses = {i['metadata']['labels']['job-name']:{ 'status':i['status']['phase'], 'command':i['spec']['containers'][0]['command'],'args':i['spec']['containers'][0]['args']} for i in items}
+    return json.dumps(statuses)
+    #return  flask.Response(pods, mimetype='text/plain')
+
 @app.route("/download/<path>")
 def DownloadLogFile (path = None):
     if path is None:
