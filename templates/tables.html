@@ -14,46 +14,21 @@
           <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Job</th>
           <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Command</th>
           <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Args</th>
-          <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">actions</th>
+          <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Actions</th>
+          <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Status</th>
         </tr>
       </thead>
       <tbody>
+        {% for train_job  in statuses %}
         <tr class="hover:bg-grey-lighter">
-          <td class="py-4 px-6 border-b border-grey-light">new-web11</td>
-          <td class="py-4 px-6 border-b border-grey-light">python -u create-model.py</td>
-          <td class="py-4 px-6 border-b border-grey-light">--testcases=70</td>
+          <td class="py-4 px-6 border-b border-grey-light">{{train_job}}</td>
+          <td class="py-4 px-6 border-b border-grey-light">{{statuses[train_job]['command']}}</td>
+          <td class="py-4 px-6 border-b border-grey-light">{{statuses[train_job]['args']}}</td>
           <td class="py-4 px-6 border-b border-grey-light">
-            <a href="#" class="text-grey-lighter font-bold py-1 px-3 rounded text-xs bg-green hover:bg-green-dark">Logs</a>
+                  <a href="{{url_for('trainlog', train_name=train_job)}}" class="text-grey-lighter font-bold py-1 px-3 rounded text-xs bg-indigo hover:bg-indigo-dark">Logs</a>
           </td>
-        </tr>
-        <tr class="hover:bg-grey-lighter">
-          <td class="py-4 px-6 border-b border-grey-light">Paris</td>
-          <td class="py-4 px-6 border-b border-grey-light">
-            <a href="#" class="text-grey-lighter font-bold py-1 px-3 rounded text-xs bg-green hover:bg-green-dark">Edit</a>
-            <a href="#" class="text-grey-lighter font-bold py-1 px-3 rounded text-xs bg-blue hover:bg-blue-dark">View</a>
-          </td>
-        </tr>
-        <tr class="hover:bg-grey-lighter">
-          <td class="py-4 px-6 border-b border-grey-light">London</td>
-          <td class="py-4 px-6 border-b border-grey-light">
-            <a href="#" class="text-grey-lighter font-bold py-1 px-3 rounded text-xs bg-green hover:bg-green-dark">Edit</a>
-            <a href="#" class="text-grey-lighter font-bold py-1 px-3 rounded text-xs bg-blue hover:bg-blue-dark">View</a>
-          </td>
-        </tr>
-        <tr class="hover:bg-grey-lighter">
-          <td class="py-4 px-6 border-b border-grey-light">Oslo</td>
-          <td class="py-4 px-6 border-b border-grey-light">
-            <a href="#" class="text-grey-lighter font-bold py-1 px-3 rounded text-xs bg-green hover:bg-green-dark">Edit</a>
-            <a href="#" class="text-grey-lighter font-bold py-1 px-3 rounded text-xs bg-blue hover:bg-blue-dark">View</a>
-          </td>
-        </tr>
-        <tr class="hover:bg-grey-lighter">
-          <td class="py-4 px-6 border-b border-grey-light">Mexico City</td>
-          <td class="py-4 px-6 border-b border-grey-light">
-            <a href="#" class="text-grey-lighter font-bold py-1 px-3 rounded text-xs bg-green hover:bg-green-dark">Edit</a>
-            <a href="#" class="text-grey-lighter font-bold py-1 px-3 rounded text-xs bg-blue hover:bg-blue-dark">View</a>
-          </td>
-        </tr>
+          <td class="py-4 px-6 border-b border-grey-light">{{statuses[train_job]['status']}}</td>
+          {% endfor %}
       </tbody>
     </table>
   </div>

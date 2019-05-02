@@ -58,8 +58,9 @@ def list_train_pods():
             shell = True)
     pods = json.loads(pods)
     items = pods['items']
-    statuses = {i['metadata']['labels']['job-name']:{ 'status':i['status']['phase'], 'command':i['spec']['containers'][0]['command'],'args':i['spec']['containers'][0]['args']} for i in items}
-    return json.dumps(statuses)
+    statuses = {i['metadata']['labels']['job-name']:{ 'status':i['status']['phase'], 'command':' '.join(i['spec']['containers'][0]['command']),'args':' '.join(i['spec']['containers'][0]['args'])} for i in items}
+    #return json.dumps(statuses)
+    return render_template('tables.html', statuses=statuses)
     #return  flask.Response(pods, mimetype='text/plain')
 
 @app.route("/download/<path>")
