@@ -21,9 +21,9 @@
       <tbody>
         {% for train_job  in statuses %}
         <tr class="hover:bg-grey-lighter">
-          <td class="py-4 px-6 border-b border-grey-light">{{train_job}}</td>
-          <td class="py-4 px-6 border-b border-grey-light">{{statuses[train_job]['command']}}</td>
-          <td class="py-4 px-6 border-b border-grey-light">{{statuses[train_job]['args']}}</td>
+          <td class="py-4 px-6 border-b border-grey-light text-indigo-dark font-bold">{{train_job}}</td>
+          <td class="py-4 px-6 border-b border-grey-light rounded bg-grey-lighter">{{statuses[train_job]['command']}}</td>
+          <td class="py-4 px-6 border-b border-grey-light rounded bg-grey-lighter">{{statuses[train_job]['args']}}</td>
           <td class="py-4 px-6 border-b border-grey-light">
                   <a href="{{url_for('trainlog', train_name=train_job)}}" class="text-grey-lighter font-bold py-1 px-3 rounded text-xs bg-indigo hover:bg-indigo-dark">Logs</a>
           </td>
