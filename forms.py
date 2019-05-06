@@ -7,7 +7,7 @@ class BuildForm(FlaskForm):
     #remember_me = BooleanField('Remember Me')
 
     version           = StringField('version', validators           = [DataRequired()])
-    github_user       = StringField('github user', validators      = [DataRequired()])
+    github_user       = StringField('github user', validators       = [DataRequired()])
     github_revision   = StringField('github revision', validators   = [DataRequired()])
     github_repo       = StringField('github repo', validators       = [DataRequired()])
     docker_user       = StringField('docker user', validators       = [DataRequired()])
@@ -26,3 +26,16 @@ class TrainForm(FlaskForm):
     command           = StringField('command', validators           = [DataRequired()])
     args              = TextAreaField('args', validators            = [DataRequired()])
     train             = SubmitField('Train')
+
+class DeployForm(FlaskForm):
+    #password = PasswordField('Password', validators=[DataRequired()])
+    #remember_me = BooleanField('Remember Me')
+
+    version           = StringField('version', validators           = [DataRequired()])
+    github_user       = StringField('github user', validators       = [DataRequired()])
+    github_revision   = StringField('github revision', validators   = [DataRequired()])
+    github_repo       = StringField('github repo', validators       = [DataRequired()])
+    docker_user       = StringField('docker user', validators       = [DataRequired()])
+    model_name        = StringField('model name', validators        = [DataRequired()])
+    docker_image_name = StringField('docker image name', validators = [DataRequired()])
+    deploy            = SubmitField('Deploy')
