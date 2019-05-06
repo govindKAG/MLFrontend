@@ -14,6 +14,7 @@ from flask import render_template
 from json2html import *
 from forms import BuildForm
 from forms import TrainForm
+from forms import DeployForm
 from util import generate_yaml
 from util import get_train_pod_name
 
@@ -173,3 +174,13 @@ def trainImage():
             time.sleep(0.1)                           # Don't need this just shows the text streaming
             yield ansi_escape.sub('',bytes.decode(line).strip()) + '<br/>\n'
     return flask.Response(inner(version, docker_user, train_name, docker_image_name, train_pod_name), mimetype='text/html')  
+
+@app.route('/deployui', methods=['GET', 'POST'])
+def deployui():
+    form = DeployForm()
+    if form.validate_on_submit():
+        #print(request.form.to_dict())
+        args = copy.deepcopy(request.form.to_dict())
+        del args['csrf_token']
+        #return redirect(url_for('buildImage',**args))
+    return render_template('deploy.html', title='nexo', form=form)
