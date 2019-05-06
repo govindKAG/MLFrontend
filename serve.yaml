@@ -25,6 +25,8 @@ spec:
       value: false
     - name: docker-image-name
       value: emote_runtime
+    - name: model-name
+      value: emote-classifier
   volumes:
   - name: my-secret-vol
     secret:
@@ -86,12 +88,12 @@ spec:
        metadata: 
          labels: 
            app: "seldon"
-         name: "emote-classifier"
+         name: "{{workflow.parameters.model-name}}"
        spec: 
          annotations: 
            deployment_version: "v1"
            project_name: "Emote"
-         name: "emote-classifier"
+         name: "{{workflow.parameters.model-name}}"
          predictors: 
            - 
              annotations: 
@@ -100,9 +102,9 @@ spec:
              - spec: 
                  containers: 
                    - 
-                     image: "{{workflow.parameters.docker-user}}/emote_runtime:{{workflow.parameters.version}}"
+                     image: "{{workflow.parameters.docker-user}}/{{workflow.parameters.docker-image-name}}:{{workflow.parameters.version}}"
                      imagePullPolicy: "Always"
-                     name: "emote-classifier"
+                     name: "{{workflow.parameters.model-name}}"
                      volumeMounts: 
                        - 
                          mountPath: "/data"
@@ -118,9 +120,9 @@ spec:
                children: []
                endpoint: 
                  type: "REST"
-               name: "emote-classifier"
+               name: "{{workflow.parameters.model-name}}"
                type: "MODEL"
-             name: "emote-classifier"
+             name: "{{workflow.parameters.model-name}}"
              replicas: 1
 
 
