@@ -184,3 +184,14 @@ def deployui():
         del args['csrf_token']
         #return redirect(url_for('buildImage',**args))
     return render_template('deploy.html', title='nexo', form=form)
+
+@app.route('/list_models')
+def list_models():
+    sdeps     = subprocess.check_output(f"kubectl get sdep -o json",
+                                       shell = True)
+    sdeps     = json.loads(sdeps)
+    items     = sdeps['items']
+    statuses  = {i['metadata']['name']:{ 'status':i['status']['state']} for i in items}
+    #return json.dumps(statuses)
+    return render_template('deploytables.html', statuses=statuses)
+    #return  flask.Response(pods, mimetype='text/plain')
