@@ -39,3 +39,10 @@ class DeployForm(FlaskForm):
     model_name        = StringField('model name', validators        = [DataRequired()])
     docker_image_name = StringField('docker image name', validators = [DataRequired()])
     deploy            = SubmitField('Deploy')
+
+class DemoForm(FlaskForm):
+    #password = PasswordField('Password', validators=[DataRequired()])
+    #remember_me = BooleanField('Remember Me')
+
+    query = StringField('Query', validators           = [DataRequired()])
+    check = SubmitField('Check')
