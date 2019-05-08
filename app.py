@@ -183,8 +183,37 @@ def deployui():
         #print(request.form.to_dict())
         args = copy.deepcopy(request.form.to_dict())
         del args['csrf_token']
-        #return redirect(url_for('buildImage',**args))
+        return redirect(url_for('deployImage',**args))
     return render_template('deploy.html', title='nexo', form=form)
+
+@app.route('/deploy')
+def deployImage():
+    version           = request.args.get('version')
+    github_user       = request.args.get('github_user')
+    github_revsion    = request.args.get('github_revision')
+    github_repo       = request.args.get('github_repo')
+    docker_user       = request.args.get('docker_user')
+    model_name        = request.args.get('model_name')
+    docker_image_name = request.args.get('docker_image_name')
+
+    #result = subprocess.check_output(f"argo submit serve.yaml  -p docker-user={docker_user} -p github-user={github_user} -p model-name={model_name} -p version={version} -p docker-image-name={docker_image_name} -p github-repo={github_repo}", shell=True)
+    return redirect(url_for('list_models'))
+
+    #argo_jobs = subprocess.check_output(shlex.split('argo list'))
+    #argo_jobs = argo_jobs.decode('utf-8')
+    ##print(argo_jobs)
+    #argo_jobs = argo_jobs.splitlines()
+    ##print(argo_jobs)
+    #
+    #latest_job = argo_jobs[1].split(' ')[0]
+    #
+    #def inner(version, github_user, github_revsion, github_repo, docker_user, model_name, docker_image_name, latest_job):
+    #    proc = subprocess.Popen(shlex.split(f'argo logs -wf {latest_job}'), shell=True, stdout=subprocess.PIPE)
+
+    #    for line in iter(proc.stdout.readline, b''):
+    #        time.sleep(0.1)                           # Don't need this just shows the text streaming
+    #        yield ansi_escape.sub('',bytes.decode(line).strip()) + '<br/>\n'
+    #return flask.Response(inner(version, github_user, github_revsion, github_repo, docker_user, model_name, docker_image_name, latest_job), mimetype='text/html')  
 
 @app.route('/list_models')
 def list_models():
