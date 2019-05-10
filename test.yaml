@@ -93,6 +93,8 @@ spec:
           template: 
             metadata: 
               name: {{workflow.parameters.train-name}}
+              labels:
+                use: trainpod
             spec: 
               containers: 
                 - 
